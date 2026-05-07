@@ -327,17 +327,21 @@ function enviar() {
   form.method = 'POST';
   form.action = url;
   form.target = 'hidden_iframe';
+  form.style.display = 'none';
 
-  // ✅ IDs CORRIGIDOS com os entry IDs reais do Google Forms
+  // Campos obrigatórios do Google Forms
   var campos = {
-    'entry.229494598':  nome,        // Nome completo (sub-field: 523730155)
-    'entry.267565831':  whatsapp,    // WhatsApp (sub-field: 463252621)
-    'entry.101912045':  ocupacao,    // Ocupação atual (sub-field real)
-    'entry.1009682974': desafio,     // Maior desafio (sub-field real)
-    'entry.1400562041': faturamento  // Faturamento (sub-field real)
+    'entry.229494598':  nome,
+    'entry.267565831':  whatsapp,
+    'entry.101912045':  ocupacao,
+    'entry.1009682974': desafio,
+    'entry.1400562041': faturamento,
+    'fvv': '1',
+    'pageHistory': '0',
+    'fbzx': '0'
   };
 
-  // Para "Outro" em ocupação, também enviar o campo especial do Google Forms
+  // Para "Outro" em ocupação
   if (document.getElementById('ocupacaoOutroInput').style.display === 'block') {
     campos['entry.101912045'] = '__other_option__';
     campos['entry.101912045.other_option_response'] = ocupacao;
@@ -358,7 +362,7 @@ function enviar() {
   setTimeout(function() {
     document.getElementById('formView').style.display = 'none';
     document.getElementById('successView').style.display = 'block';
-  }, 500);
+  }, 800);
 }
 </script>
 

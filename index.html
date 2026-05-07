@@ -34,7 +34,7 @@
   .footer { text-align: center; margin-top: 24px; font-size: 12px; color: var(--muted); }
   .success { display: none; text-align: center; padding: 40px 0; }
   .success h2 { font-family: 'Syne', sans-serif; font-size: 1.5rem; color: var(--green); margin-bottom: 12px; }
-  .success p { color: var(--muted); font-size: 15px; }
+  .success p { color: var(--muted); font-size: 15px; line-height: 1.7; }
   .check { font-size: 48px; margin-bottom: 16px; }
 </style>
 </head>
@@ -79,8 +79,8 @@
 
   <div class="success" id="successView">
     <div class="check">🎉</div>
-    <h2>Vaga Garantida!</h2>
-    <p>Obrigado! Em breve entraremos em contato pelo WhatsApp.</p>
+    <h2>Pré-inscrição Realizada!</h2>
+    <p>Recebemos seus dados.<br><br>Se ainda houver vagas disponíveis, em breve nossa equipe entrará em contato via WhatsApp para confirmar seu ingresso.</p>
   </div>
 </div>
 
@@ -98,20 +98,36 @@ function enviar() {
   }
 
   var formId = '1FAIpQLSdHVD9mos24Of4k8ua-yy-IgBzvxgfMgU2O59u_jDo33GuCPg';
-  var base = 'https://docs.google.com/forms/d/e/' + formId + '/formResponse?';
-  var params = 'entry.229494598=' + encodeURIComponent(nome) +
-               '&entry.267565831=' + encodeURIComponent(whatsapp) +
-               '&entry.1836824768=' + encodeURIComponent(ocupacao) +
-               '&entry.305672205=' + encodeURIComponent(desafio) +
-               '&entry.953017918=' + encodeURIComponent(faturamento);
+  var url = 'https://docs.google.com/forms/d/e/' + formId + '/formResponse';
 
-  var iframe = document.createElement('iframe');
-  iframe.style.display = 'none';
-  iframe.src = base + params;
-  document.body.appendChild(iframe);
+  var form = document.createElement('form');
+  form.method = 'POST';
+  form.action = url;
+  form.target = '_blank';
 
-  document.getElementById('formView').style.display = 'none';
-  document.getElementById('successView').style.display = 'block';
+  var campos = {
+    'entry.229494598': nome,
+    'entry.267565831': whatsapp,
+    'entry.1836824768': ocupacao,
+    'entry.305672205': desafio,
+    'entry.953017918': faturamento
+  };
+
+  for (var key in campos) {
+    var input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = key;
+    input.value = campos[key];
+    form.appendChild(input);
+  }
+
+  document.body.appendChild(form);
+  form.submit();
+
+  setTimeout(function() {
+    document.getElementById('formView').style.display = 'none';
+    document.getElementById('successView').style.display = 'block';
+  }, 500);
 }
 </script>
 </body>

@@ -1,3 +1,81 @@
+
+
+Compartilhar
+
+Iniciar teste gratuito
+pasted_content.txt
+Texto · 104.03 KB
+ essa é a completa atual
+Lite
+Recebi o código completo. Agora, por favor, envie a parte do Google Apps Script que deve substituir o Google Forms, ou me explique como deve ser a integração, para que eu possa realizar o ajuste corretamente.
+Perfeito, tenho o código completo! Vejo que você ainda está usando o Google Forms com o formId antigo. Vou gerar o HTML atualizado com o Google Apps Script no lugar.
+Aqui está só o trecho do script que você precisa substituir — E remova o <iframe name="hidden_iframe"> lá no final, pois não é mais necessário. o resto da página fica igual:
+Substitua a função enviar() por essa: 
+async function enviar() {
+  var nome = document.getElementById('nome').value.trim();
+  var whatsapp = document.getElementById('whatsapp').value.trim();
+
+  if (document.getElementById('ocupacaoOutroInput').style.display === 'block') {
+    valores.ocupacao = document.getElementById('ocupacaoOutro').value.trim();
+  }
+
+  var ocupacao = valores.ocupacao;
+  var desafio = valores.desafio;
+  var faturamento = valores.faturamento;
+
+  if (!nome || !whatsapp || !ocupacao || !desafio) {
+    alert('Por favor, preencha todos os campos obrigatórios.');
+    return;
+  }
+
+  var url = "https://script.google.com/macros/s/AKfycby20mGoRPekswDQFknBbCEj7xjbIe4Rjdb7RvBlYMHJdh0_aUelPGfRfN9lyjCKEuwg/exec";
+
+  var params = new URLSearchParams({
+    nome: nome,
+    whatsapp: whatsapp,
+    ocupacao: ocupacao,
+    desafio: desafio,
+    faturamento: faturamento
+  });
+
+  try {
+    await fetch(url, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: params
+    });
+  } catch (e) {}
+
+  document.getElementById('formView').style.display = 'none';
+  document.getElementById('successView').style.display = 'block';
+}
+Lite
+Entendido! Vou ler o código que você enviou, substituir a função enviar() pela nova versão do Google Apps Script e remover o iframe desnecessário. Já retorno com o código atualizado.
+Analisarei o código para substituir a função `enviar()` pelo novo Google Apps Script e remover o iframe desnecessário.
+
+Identifiquei a função `enviar()` e o iframe no código. Vou substituir a função pelo novo Google Apps Script e remover o iframe desnecessário.
+
+Atualizei a função `enviar()` para usar o Google Apps Script via fetch, removendo o iframe desnecessário. Próximo passo: revisar o código final.
+
+Lite
+Pronto! Realizei os ajustes conforme solicitado:
+Substituí a função enviar(): Removi a lógica antiga que utilizava o Google Forms e inseri a nova versão que utiliza o fetch para enviar os dados ao seu Google Apps Script.
+Removi o <iframe>: O iframe hidden_iframe foi retirado, pois não é mais necessário para o envio via script.
+O arquivo atualizado está anexo abaixo. Você pode baixar e testar diretamente.
+pasted_content.txt
+Texto · 102.96 KB
+Ver todos os arquivos nesta tarefa
+Tarefa concluída
+Como foi este resultado?
+Sugestões de acompanhamento
+
+
+
+Computadores na nuvem
+Novo
+
+pasted_content.txt
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -303,7 +381,7 @@ function selectRadio(groupId, el, value) {
   }
 }
 
-function enviar() {
+async function enviar() {
   var nome = document.getElementById('nome').value.trim();
   var whatsapp = document.getElementById('whatsapp').value.trim();
 
@@ -320,53 +398,32 @@ function enviar() {
     return;
   }
 
-  var formId = '1FAIpQLSdHVD9mos24Of4k8ua-yy-IgBzvxgfMgU2O59u_jDo33GuCPg';
-  var url = 'https://docs.google.com/forms/d/e/' + formId + '/formResponse';
+  var url = "https://script.google.com/macros/s/AKfycby20mGoRPekswDQFknBbCEj7xjbIe4Rjdb7RvBlYMHJdh0_aUelPGfRfN9lyjCKEuwg/exec";
 
-  var form = document.createElement('form');
-  form.method = 'POST';
-  form.action = url;
-  form.target = 'hidden_iframe';
-  form.style.display = 'none';
+  var params = new URLSearchParams({
+    nome: nome,
+    whatsapp: whatsapp,
+    ocupacao: ocupacao,
+    desafio: desafio,
+    faturamento: faturamento
+  });
 
-  // Campos obrigatórios do Google Forms
-  var campos = {
-    'entry.229494598':  nome,
-    'entry.267565831':  whatsapp,
-    'entry.101912045':  ocupacao,
-    'entry.1009682974': desafio,
-    'entry.1400562041': faturamento,
-    'fvv': '1',
-    'pageHistory': '0',
-    'fbzx': '0'
-  };
+  try {
+    await fetch(url, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: params
+    });
+  } catch (e) {}
 
-  // Para "Outro" em ocupação
-  if (document.getElementById('ocupacaoOutroInput').style.display === 'block') {
-    campos['entry.101912045'] = '__other_option__';
-    campos['entry.101912045.other_option_response'] = ocupacao;
-  }
-
-  for (var key in campos) {
-    var input = document.createElement('input');
-    input.type = 'hidden';
-    input.name = key;
-    input.value = campos[key];
-    form.appendChild(input);
-  }
-
-  document.body.appendChild(form);
-  form.submit();
-  document.body.removeChild(form);
-
-  setTimeout(function() {
-    document.getElementById('formView').style.display = 'none';
-    document.getElementById('successView').style.display = 'block';
-  }, 800);
+  document.getElementById('formView').style.display = 'none';
+  document.getElementById('successView').style.display = 'block';
 }
 </script>
 
-<iframe name="hidden_iframe" style="display:none;"></iframe>
+
 
 </body>
 </html>
+Ajuste de Código: Substituir Google Forms por Google Apps Script - Manus
